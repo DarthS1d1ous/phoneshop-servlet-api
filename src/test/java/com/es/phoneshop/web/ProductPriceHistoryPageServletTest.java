@@ -13,14 +13,16 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
-import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ProductListPageServletTest {
+public class ProductPriceHistoryPageServletTest {
     @Mock
     private HttpServletRequest request;
     @Mock
@@ -28,31 +30,26 @@ public class ProductListPageServletTest {
     @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
-    private List<Product> products;
-    @Mock
     private ArrayListProductDao arrayListProductDao;
+    @Mock
+    private Product product;
     @InjectMocks
-    private ProductListPageServlet servlet;
-    private String query = "samsung";
-    private String order = "ask";
-    private String sortBy = "description";
+    private ProductPriceHistoryPageServlet servlet;
 
     @Before
-    public void setup() {
-        when(arrayListProductDao.findProducts(query,order,sortBy)).thenReturn(products);
-        when(request.getParameter("query")).thenReturn(query);
-        when(request.getParameter("sort")).thenReturn(sortBy);
-        when(request.getParameter("order")).thenReturn(order);
+    public void setup(){
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-    }
 
+    }
     @Test
-    public void testDoGet() throws ServletException, IOException {
+    public void doGet() throws ServletException, IOException {
+        Long correctId = 1L;
+        when(request.getPathInfo()).thenReturn("/" + correctId);
+        when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
         servlet.doGet(request, response);
-        verify(arrayListProductDao).findProducts(eq(query),eq(order),eq(sortBy));
-        verify(request, times(1)).setAttribute(eq("products"), eq(products));
-        verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
+        verify(request).setAttribute(eq("id"),eq(correctId));
+        verify(request).setAttribute(eq("product"), eq(product));
+        verify(request).getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp");
         verify(requestDispatcher).forward(request, response);
     }
-
 }

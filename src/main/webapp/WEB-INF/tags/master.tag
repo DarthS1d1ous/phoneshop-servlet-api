@@ -17,5 +17,8 @@
   <main>
     <jsp:doBody/>
   </main>
+  <footer>
+    <p>(c) Expert Soft 2019</p>
+  </footer>
 </body>
 </html>
