@@ -38,34 +38,34 @@ public class ProductDetailsPageServletTest {
     private ProductDetailsPageServlet servlet;
 
     @Before
-    public void setup(){
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
-        Long correctId = 1L;
+        Long correctId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + correctId);
         when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
+
         servlet.doGet(request, response);
-        verify(request).setAttribute(eq("id"),eq(correctId));
+
         verify(request).setAttribute(eq("product"), eq(product));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productDetails.jsp");
         verify(requestDispatcher).forward(request, response);
     }
 
-    //Не работает
-    @Test(expected = ProductNotFoundException.class)
+
+    @Test
     public void testDoGetProductNotFoundException() throws ServletException, IOException {
         Long invalidId = Long.MAX_VALUE;
         when(request.getPathInfo()).thenReturn("/" + invalidId);
-        when(product.getId()).thenReturn(1L);
-//        when(arrayListProductDao.getProduct(invalidId)).thenThrow(new ProductNotFoundException());
+        when(arrayListProductDao.getProduct(invalidId)).thenThrow(new ProductNotFoundException());
+
         servlet.doGet(request, response);
-        verify(request).setAttribute(eq("id"),eq(invalidId));
-        verify(request).setAttribute(eq("product"), eq(product));
-        verify(request).getRequestDispatcher("/WEB-INF/pages/productDetails.jsp");
+
+        verify(response).setStatus(eq(404));
+        verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
         verify(requestDispatcher).forward(request, response);
     }
 }

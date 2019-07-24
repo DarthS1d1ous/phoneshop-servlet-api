@@ -2,7 +2,7 @@ package com.es.phoneshop.model.product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
-import java.util.LinkedList;
+import java.util.List;
 
 public class Product {
     private Long id;
@@ -18,16 +18,18 @@ public class Product {
     private Currency currency;
     private int stock;
     private String imageUrl;
-    private LinkedList<PriceHistory> priceHistory;
+    private List<PriceHistory> priceHistory;
 
     public Product() {
     }
 
-    public Product(Long id, String code, String description, BigDecimal price, Currency currency, int stock, String imageUrl, LinkedList<PriceHistory> priceHistory) {
+    public Product(Long id, String code, String description, Currency currency, int stock, String imageUrl, List<PriceHistory> priceHistory) {
         this.id = id;
         this.code = code;
         this.description = description;
-        this.price = price;
+        if (!priceHistory.isEmpty()) {
+            this.price = priceHistory.get(0).getPrice();
+        } else this.price = null;
         this.currency = currency;
         this.stock = stock;
         this.imageUrl = imageUrl;
@@ -62,10 +64,6 @@ public class Product {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public Currency getCurrency() {
         return currency;
     }
@@ -90,11 +88,11 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public LinkedList<PriceHistory> getPriceHistory() {
+    public List<PriceHistory> getPriceHistory() {
         return priceHistory;
     }
 
-    public void setPriceHistory(LinkedList<PriceHistory> priceHistory) {
+    public void setPriceHistory(List<PriceHistory> priceHistory) {
         this.priceHistory = priceHistory;
     }
 }

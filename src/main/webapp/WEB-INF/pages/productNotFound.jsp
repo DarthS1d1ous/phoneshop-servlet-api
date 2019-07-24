@@ -5,5 +5,5 @@
 
 <jsp:useBean id="id" type="java.lang.Long" scope="request"/>
 <tags:master pageTitle="Product not found">
-    <h1>Product with id ${id} not found</h1>
+    <h1>Product with this id not found</h1>
 </tags:master>

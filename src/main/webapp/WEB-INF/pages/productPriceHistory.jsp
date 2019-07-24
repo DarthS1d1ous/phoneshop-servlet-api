@@ -20,7 +20,7 @@
         </thead>
         <c:forEach var="priceHistory" items="${product.priceHistory}">
             <tr>
-                <td>${priceHistory.date.time}</td>
+                <td>${priceHistory.date}</td>
                 <td class="price">
                     <fmt:formatNumber value="${priceHistory.price}" type="currency" currencySymbol="${product.currency.symbol}"/>
                 </td>

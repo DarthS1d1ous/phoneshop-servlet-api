@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,19 +38,34 @@ public class ProductPriceHistoryPageServletTest {
     private ProductPriceHistoryPageServlet servlet;
 
     @Before
-    public void setup(){
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-
     }
+
     @Test
-    public void doGet() throws ServletException, IOException {
-        Long correctId = 1L;
+    public void testDoGet() throws ServletException, IOException {
+        Long correctId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + correctId);
         when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
+
         servlet.doGet(request, response);
-        verify(request).setAttribute(eq("id"),eq(correctId));
+
         verify(request).setAttribute(eq("product"), eq(product));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp");
+        verify(requestDispatcher).forward(request, response);
+    }
+
+
+    @Test
+    public void testDoGetProductNotFoundException() throws ServletException, IOException {
+        Long invalidId = Long.MAX_VALUE;
+        when(request.getPathInfo()).thenReturn("/" + invalidId);
+        when(arrayListProductDao.getProduct(invalidId)).thenThrow(new ProductNotFoundException());
+
+        servlet.doGet(request, response);
+
+        verify(response).setStatus(eq(404));
+        verify(request).getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp");
         verify(requestDispatcher).forward(request, response);
     }
 }

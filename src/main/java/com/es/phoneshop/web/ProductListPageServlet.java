@@ -1,6 +1,8 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.SortBy;
 
 
 import javax.servlet.ServletException;
@@ -25,16 +27,17 @@ public class ProductListPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("query");
-        String order = null;
+        String order = Order.ASC.getOrder();
         if (request.getParameter(ORDER) != null) {
             order = request.getParameter(ORDER);
         }
-        String sortBy = null;
+        String sortBy = SortBy.DESCRIPTION.getSortBy();
         if (request.getParameter(SORT) != null) {
             sortBy = request.getParameter(SORT);
         }
-
-        request.setAttribute("products", arrayListProductDao.findProducts(query,order,sortBy));
+        if (query == null ) {
+            request.setAttribute("products", arrayListProductDao.findProducts("", order, sortBy));
+        } else request.setAttribute("products", arrayListProductDao.findProducts(query, order, sortBy));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

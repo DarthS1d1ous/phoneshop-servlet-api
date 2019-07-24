@@ -1,13 +1,13 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.SortBy;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
-    private static ArrayListProductDao instance = new ArrayListProductDao();
-
     private Long counter = 0L;
 
     private List<Product> products;
@@ -17,7 +17,11 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     public static ArrayListProductDao getInstance() {
-        return instance;
+        return SingletonHolder.instance;
+    }
+
+    public static class SingletonHolder {
+        public static final ArrayListProductDao instance = new ArrayListProductDao();
     }
 
     @Override
@@ -46,30 +50,32 @@ public class ArrayListProductDao implements ProductDao {
                 .filter(product -> product.getPrice() != null && product.getStock() > 0)
                 .filter(product -> Arrays.stream(words).anyMatch(x -> product.getDescription().toLowerCase().contains(x)))
                 .collect(Collectors.toList());
+
+//        return products.stream()
+//                .filter(product -> product.getPrice() != null && product.getStock() > 0)
+//                .collect(Collectors.toMap(Function.identity(), product -> Arrays.stream(words).filter(x -> product.getDescription().toLowerCase().contains(x)).count()))
+//                .entrySet().stream()
+//                .filter(x -> x.getValue() > 0)
+//                .sorted(Comparator.comparing(Map.Entry<Product,Long>::getValue))
+//                .map(Map.Entry::getKey)
+//                .collect(Collectors.toList());
     }
 
     @Override
     public synchronized List<Product> findProducts(String query, String order, String sortBy) {
         List<Product> products = findProducts(query);
-        Comparator<Product> comparator = null;
-        if (sortBy != null) {
-            switch (sortBy) {
-                case "description":
-                    comparator = Comparator.comparing(Product::getDescription, Comparator.comparing(String::toLowerCase));
-                    break;
-                case "price":
-                    comparator = Comparator.comparing(Product::getPrice);
-                    break;
-
-            }
-            if (comparator == null) {
-                return products;
-            }
-            if (order.equals("desc")) {
-                comparator = comparator.reversed();
-            }
-            products.sort(comparator);
+        Comparator<Product> comparator = sortBy.equals(SortBy.DESCRIPTION.getSortBy())
+                ? Comparator.comparing(Product::getDescription, Comparator.comparing(String::toLowerCase))
+                : sortBy.equals(SortBy.PRICE.getSortBy())
+                ? Comparator.comparing(Product::getPrice)
+                : null;
+        if (comparator == null) {
+            throw new NullPointerException("Incorrect sortBy");
         }
+        if (order.equals(Order.DESC.getOrder())) {
+            comparator = comparator.reversed();
+        }
+        products.sort(comparator);
         return products;
     }
 
@@ -87,4 +93,7 @@ public class ArrayListProductDao implements ProductDao {
         products.removeIf(product -> product.getId().equals(id));
     }
 
+    protected void setProducts(List<Product> products) {
+        this.products = products;
+    }
 }

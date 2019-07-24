@@ -2,6 +2,8 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.SortBy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,23 +35,36 @@ public class ProductListPageServletTest {
     private ArrayListProductDao arrayListProductDao;
     @InjectMocks
     private ProductListPageServlet servlet;
-    private String query = "samsung";
-    private String order = "ask";
-    private String sortBy = "description";
 
     @Before
     public void setup() {
-        when(arrayListProductDao.findProducts(query,order,sortBy)).thenReturn(products);
-        when(request.getParameter("query")).thenReturn(query);
-        when(request.getParameter("sort")).thenReturn(sortBy);
-        when(request.getParameter("order")).thenReturn(order);
+        when(request.getParameter("sort")).thenReturn(SortBy.DESCRIPTION.getSortBy());
+        when(request.getParameter("order")).thenReturn(Order.ASC.getOrder());
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
+        String query = "samsung";
+        when(arrayListProductDao.findProducts(query,Order.ASC.getOrder(),SortBy.DESCRIPTION.getSortBy())).thenReturn(products);
+        when(request.getParameter("query")).thenReturn(query);
+
         servlet.doGet(request, response);
-        verify(arrayListProductDao).findProducts(eq(query),eq(order),eq(sortBy));
+
+        verify(arrayListProductDao).findProducts(eq(query),eq(Order.ASC.getOrder()),eq(SortBy.DESCRIPTION.getSortBy()));
+        verify(request, times(1)).setAttribute(eq("products"), eq(products));
+        verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
+        verify(requestDispatcher).forward(request, response);
+    }
+
+    @Test
+    public void testDoGetQueryNull() throws ServletException, IOException {
+        when(arrayListProductDao.findProducts("",Order.ASC.getOrder(),SortBy.DESCRIPTION.getSortBy())).thenReturn(products);
+        when(request.getParameter("query")).thenReturn(null);
+
+        servlet.doGet(request, response);
+
+        verify(arrayListProductDao).findProducts(eq(""),eq(Order.ASC.getOrder()),eq(SortBy.DESCRIPTION.getSortBy()));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);

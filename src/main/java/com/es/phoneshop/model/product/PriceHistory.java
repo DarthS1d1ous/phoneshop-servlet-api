@@ -5,22 +5,22 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class PriceHistory {
-    private GregorianCalendar date;
+    private Date date;
     private BigDecimal price;
 
     public PriceHistory() {
     }
 
-    public PriceHistory(GregorianCalendar date, BigDecimal price) {
+    public PriceHistory(Date date, BigDecimal price) {
         this.date = date;
         this.price = price;
     }
 
-    public GregorianCalendar getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(GregorianCalendar date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

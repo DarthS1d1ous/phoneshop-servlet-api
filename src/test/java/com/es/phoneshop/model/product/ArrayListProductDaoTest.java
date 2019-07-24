@@ -1,6 +1,8 @@
 package com.es.phoneshop.model.product;
 
 
+import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.SortBy;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +12,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 
 import static org.junit.Assert.*;
@@ -22,45 +25,66 @@ public class ArrayListProductDaoTest {
     private Product product1;
     @Mock
     private Product product2;
-
+    @Mock
+    private Product product3;
+    @Mock
+    private Product product4;
 
     @InjectMocks
     private ArrayListProductDao productDao = ArrayListProductDao.getInstance();
 
     @Before
     public void setup() {
-        when(product1.getId()).thenReturn(1L);
-        when(product1.getStock()).thenReturn(1);
-        when(product1.getPrice()).  thenReturn(new BigDecimal(100));
-        when(product1.getDescription()).thenReturn("samsung");
-        when(product2.getDescription()).thenReturn("sony");
-        when(product2.getId()).thenReturn(null);
-        when(product2.getStock()).thenReturn(1);
-        when(product2.getPrice()).thenReturn(new BigDecimal(100));
+        changeProduct(product1, 1L, 1, "Samsung Galaxy S", new BigDecimal(100));
+        changeProduct(product2, 2L, 1, "Apple iPhone", new BigDecimal(200));
+        changeProduct(product3, 3L, 0, "Siemens C56", new BigDecimal(300));
+        changeProduct(product4, null, 1, "Palm Pixi", new BigDecimal(200));
+        productDao.setProducts(new ArrayList<>(Arrays.asList(product1, product2, product3)));
+    }
+
+    public void changeProduct(Product product, Long id, int stock, String description, BigDecimal price) {
+        when(product.getId()).thenReturn(id);
+        when(product.getStock()).thenReturn(stock);
+        when(product.getPrice()).thenReturn(price);
+        when(product.getDescription()).thenReturn(description);
     }
 
     @Test
     public void testFindProducts() {
-        assertEquals(1,productDao.findProducts().size());
+        assertEquals(2, productDao.findProducts().size());
     }
 
     @Test
     public void testFindProductsByQuery() {
-        int size =productDao.findProducts("sony").size();
-        assertEquals(1,size);
+        int size = productDao.findProducts("s o").size();
+        assertEquals(2, size);
     }
 
     @Test
-    public void testFindProductByDescriptionAsk(){
+    public void testFindProductByDescriptionAsk() {
+        assertEquals(2,productDao.findProducts("s o", Order.ASC.getOrder(), SortBy.DESCRIPTION.getSortBy()).size());
+    }
 
+    @Test
+    public void testFindProductByDescriptionDesc() {
+        assertEquals(2,productDao.findProducts("s o", Order.DESC.getOrder(), SortBy.DESCRIPTION.getSortBy()).size());
+    }
+
+    @Test
+    public void testFindProductByPriceAsc() {
+        assertEquals(2,productDao.findProducts("s o", Order.ASC.getOrder(), SortBy.PRICE.getSortBy()).size());
+    }
+
+    @Test
+    public void testFindProductByPriceDesc() {
+        assertEquals(2,productDao.findProducts("s o", Order.DESC.getOrder(), SortBy.PRICE.getSortBy()).size());
     }
 
     @Test(expected = ProductNotFoundException.class)
     public void testGetProductsIllegalArgumentException() throws ProductNotFoundException {
-        productDao.getProduct(null);
+        productDao.getProduct(Long.MAX_VALUE);
     }
 
-    //Не работает
     @Test
     public void testGetProduct() throws ProductNotFoundException {
         assertEquals((Long) 1L, productDao.getProduct(1L).getId());
@@ -74,16 +98,14 @@ public class ArrayListProductDaoTest {
     @Test
     public void testSave() {
         int sizeBefore = productDao.findProducts().size();
-        productDao.save(product2);
+        productDao.save(product4);
         assertEquals(sizeBefore + 1, productDao.findProducts().size());
     }
 
-    //Не работает
     @Test
     public void testDelete() {
-        List<Product> products = productDao.findProducts();
-        int sizeBefore = products.size();
-        productDao.delete(products.get(0).getId());
+        int sizeBefore = productDao.findProducts().size();
+        productDao.delete(product1.getId());
         assertEquals(sizeBefore - 1, productDao.findProducts().size());
     }
 }
