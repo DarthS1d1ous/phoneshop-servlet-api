@@ -65,21 +65,6 @@ public class ArrayListProductDaoTest {
         assertEquals(2,productDao.findProducts("s o", Order.ASC.getOrder(), SortBy.DESCRIPTION.getSortBy()).size());
     }
 
-    @Test
-    public void testFindProductByDescriptionDesc() {
-        assertEquals(2,productDao.findProducts("s o", Order.DESC.getOrder(), SortBy.DESCRIPTION.getSortBy()).size());
-    }
-
-    @Test
-    public void testFindProductByPriceAsc() {
-        assertEquals(2,productDao.findProducts("s o", Order.ASC.getOrder(), SortBy.PRICE.getSortBy()).size());
-    }
-
-    @Test
-    public void testFindProductByPriceDesc() {
-        assertEquals(2,productDao.findProducts("s o", Order.DESC.getOrder(), SortBy.PRICE.getSortBy()).size());
-    }
-
     @Test(expected = ProductNotFoundException.class)
     public void testGetProductsIllegalArgumentException() throws ProductNotFoundException {
         productDao.getProduct(Long.MAX_VALUE);

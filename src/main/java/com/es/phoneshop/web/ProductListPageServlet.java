@@ -27,15 +27,15 @@ public class ProductListPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("query");
-        String order = Order.ASC.getOrder();
+        Order order = Order.ASC;
         if (request.getParameter(ORDER) != null) {
-            order = request.getParameter(ORDER);
+            order = Order.valueOf(request.getParameter(ORDER));
         }
-        String sortBy = SortBy.DESCRIPTION.getSortBy();
+        SortBy sortBy = null;
         if (request.getParameter(SORT) != null) {
-            sortBy = request.getParameter(SORT);
+            sortBy = SortBy.valueOf(request.getParameter(SORT));
         }
-        if (query == null ) {
+        if (query == null) {
             request.setAttribute("products", arrayListProductDao.findProducts("", order, sortBy));
         } else request.setAttribute("products", arrayListProductDao.findProducts(query, order, sortBy));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);

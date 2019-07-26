@@ -18,13 +18,13 @@
         <td>Image</td>
         <td>
             Description
-            <tags:sort sortBy="description" order="desc"/>
-            <tags:sort sortBy="description" order="asc"/>
+            <tags:sort sortBy="DESCRIPTION" order="DESC"/>
+            <tags:sort sortBy="DESCRIPTION" order="ASC"/>
         </td>
         <td class="price">
             Price
-            <tags:sort sortBy="price" order="desc"/>
-            <tags:sort sortBy="price" order="asc"/>
+            <tags:sort sortBy="PRICE" order="DESC"/>
+            <tags:sort sortBy="PRICE" order="ASC"/>
         </td>
       </tr>
     </thead>

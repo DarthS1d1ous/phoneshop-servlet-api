@@ -3,8 +3,10 @@ package com.es.phoneshop.model.product;
 import com.es.phoneshop.model.product.enums.Order;
 import com.es.phoneshop.model.product.enums.SortBy;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
@@ -48,35 +50,35 @@ public class ArrayListProductDao implements ProductDao {
 
         return products.stream()
                 .filter(product -> product.getPrice() != null && product.getStock() > 0)
-                .filter(product -> Arrays.stream(words).anyMatch(x -> product.getDescription().toLowerCase().contains(x)))
+                .collect(Collectors.toMap(Function.identity(), product -> Arrays.stream(words)
+                        .filter(x -> product.getDescription().toLowerCase().contains(x)).count()))
+                .entrySet().stream()
+                .filter(x -> x.getValue() > 0)
+                .sorted(Comparator.comparing(Map.Entry<Product, Long>::getValue).reversed())
+                .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-
-//        return products.stream()
-//                .filter(product -> product.getPrice() != null && product.getStock() > 0)
-//                .collect(Collectors.toMap(Function.identity(), product -> Arrays.stream(words).filter(x -> product.getDescription().toLowerCase().contains(x)).count()))
-//                .entrySet().stream()
-//                .filter(x -> x.getValue() > 0)
-//                .sorted(Comparator.comparing(Map.Entry<Product,Long>::getValue))
-//                .map(Map.Entry::getKey)
-//                .collect(Collectors.toList());
     }
 
     @Override
-    public synchronized List<Product> findProducts(String query, String order, String sortBy) {
+    public synchronized List<Product> findProducts(String query, Order order, SortBy sortBy) {
         List<Product> products = findProducts(query);
-        Comparator<Product> comparator = sortBy.equals(SortBy.DESCRIPTION.getSortBy())
-                ? Comparator.comparing(Product::getDescription, Comparator.comparing(String::toLowerCase))
-                : sortBy.equals(SortBy.PRICE.getSortBy())
-                ? Comparator.comparing(Product::getPrice)
-                : null;
-        if (comparator == null) {
-            throw new NullPointerException("Incorrect sortBy");
+        if (sortBy == null) {
+            return products;
+        } else {
+            Comparator<Product> comparator = sortBy.equals(SortBy.DESCRIPTION)
+                    ? Comparator.comparing(Product::getDescription, Comparator.comparing(String::toLowerCase))
+                    : sortBy.equals(SortBy.PRICE)
+                    ? Comparator.comparing(Product::getPrice)
+                    : null;
+            if (comparator == null) {
+                throw new IllegalArgumentException("Incorrect sortBy");
+            }
+            if (order.equals(Order.DESC)) {
+                comparator = comparator.reversed();
+            }
+            products.sort(comparator);
+            return products;
         }
-        if (order.equals(Order.DESC.getOrder())) {
-            comparator = comparator.reversed();
-        }
-        products.sort(comparator);
-        return products;
     }
 
     @Override

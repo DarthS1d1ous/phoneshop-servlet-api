@@ -38,20 +38,20 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup() {
-        when(request.getParameter("sort")).thenReturn(SortBy.DESCRIPTION.getSortBy());
-        when(request.getParameter("order")).thenReturn(Order.ASC.getOrder());
+        when(request.getParameter("sort")).thenReturn("DESCRIPTION");
+        when(request.getParameter("order")).thenReturn("ASC");
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
         String query = "samsung";
-        when(arrayListProductDao.findProducts(query,Order.ASC.getOrder(),SortBy.DESCRIPTION.getSortBy())).thenReturn(products);
+        when(arrayListProductDao.findProducts(query,Order.ASC,SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(query);
 
         servlet.doGet(request, response);
 
-        verify(arrayListProductDao).findProducts(eq(query),eq(Order.ASC.getOrder()),eq(SortBy.DESCRIPTION.getSortBy()));
+        verify(arrayListProductDao).findProducts(eq(query),eq(Order.ASC),eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);
@@ -59,12 +59,12 @@ public class ProductListPageServletTest {
 
     @Test
     public void testDoGetQueryNull() throws ServletException, IOException {
-        when(arrayListProductDao.findProducts("",Order.ASC.getOrder(),SortBy.DESCRIPTION.getSortBy())).thenReturn(products);
+        when(arrayListProductDao.findProducts("",Order.ASC,SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(null);
 
         servlet.doGet(request, response);
 
-        verify(arrayListProductDao).findProducts(eq(""),eq(Order.ASC.getOrder()),eq(SortBy.DESCRIPTION.getSortBy()));
+        verify(arrayListProductDao).findProducts(eq(""),eq(Order.ASC),eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);
