@@ -1,8 +1,10 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
-import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
+import com.es.phoneshop.model.product.history.HistoryService;
+import com.es.phoneshop.model.product.history.HttpSessionHistoryService;
 
 
 import javax.servlet.ServletException;
@@ -18,7 +20,6 @@ public class ProductListPageServlet extends HttpServlet {
 
     private ArrayListProductDao arrayListProductDao;
 
-
     @Override
     public void init() {
         this.arrayListProductDao = ArrayListProductDao.getInstance();
@@ -27,17 +28,18 @@ public class ProductListPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter("query");
-        Order order = Order.ASC;
+        OutputOrder outputOrder = OutputOrder.ASC;
         if (request.getParameter(ORDER) != null) {
-            order = Order.valueOf(request.getParameter(ORDER));
+            outputOrder = OutputOrder.valueOf(request.getParameter(ORDER));
         }
         SortBy sortBy = null;
         if (request.getParameter(SORT) != null) {
             sortBy = SortBy.valueOf(request.getParameter(SORT));
         }
         if (query == null) {
-            request.setAttribute("products", arrayListProductDao.findProducts("", order, sortBy));
-        } else request.setAttribute("products", arrayListProductDao.findProducts(query, order, sortBy));
+            query = "";
+        }
+        request.setAttribute("products", arrayListProductDao.findProducts(query, outputOrder, sortBy));
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

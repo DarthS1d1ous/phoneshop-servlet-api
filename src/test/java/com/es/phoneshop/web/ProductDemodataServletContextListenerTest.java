@@ -18,7 +18,7 @@ public class ProductDemodataServletContextListenerTest {
     private final ProductDemodataServletContextListener productDemodataServletContextListener = new ProductDemodataServletContextListener();
 
     @Test
-    public void contextInitialized() {
+    public void testContextInitialized() {
         productDemodataServletContextListener.contextInitialized(servletContextEvent);
         assertEquals(ArrayListProductDao.getInstance().findProducts().size(),12);
     }

@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.product.enums;
 
-public enum Order {
+public enum OutputOrder {
     ASC,
     DESC
 }

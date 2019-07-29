@@ -2,7 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +46,12 @@ public class ProductListPageServletTest {
     @Test
     public void testDoGet() throws ServletException, IOException {
         String query = "samsung";
-        when(arrayListProductDao.findProducts(query,Order.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(arrayListProductDao.findProducts(query,OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(query);
 
         servlet.doGet(request, response);
 
-        verify(arrayListProductDao).findProducts(eq(query),eq(Order.ASC),eq(SortBy.DESCRIPTION));
+        verify(arrayListProductDao).findProducts(eq(query),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);
@@ -59,12 +59,12 @@ public class ProductListPageServletTest {
 
     @Test
     public void testDoGetQueryNull() throws ServletException, IOException {
-        when(arrayListProductDao.findProducts("",Order.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(arrayListProductDao.findProducts("",OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(null);
 
         servlet.doGet(request, response);
 
-        verify(arrayListProductDao).findProducts(eq(""),eq(Order.ASC),eq(SortBy.DESCRIPTION));
+        verify(arrayListProductDao).findProducts(eq(""),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);

@@ -1,6 +1,6 @@
 package com.es.phoneshop.model.product;
 
-import com.es.phoneshop.model.product.enums.Order;
+import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 import com.sun.org.apache.xpath.internal.operations.Or;
@@ -60,7 +60,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public synchronized List<Product> findProducts(String query, Order order, SortBy sortBy) {
+    public synchronized List<Product> findProducts(String query, OutputOrder outputOrder, SortBy sortBy) {
         List<Product> products = findProducts(query);
         if (sortBy == null) {
             return products;
@@ -73,7 +73,7 @@ public class ArrayListProductDao implements ProductDao {
             if (comparator == null) {
                 throw new IllegalArgumentException("Incorrect sortBy");
             }
-            if (order.equals(Order.DESC)) {
+            if (outputOrder.equals(OutputOrder.DESC)) {
                 comparator = comparator.reversed();
             }
             products.sort(comparator);
