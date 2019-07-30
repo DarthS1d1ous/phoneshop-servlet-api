@@ -2,6 +2,8 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.enums.OutputOrder;
+import com.es.phoneshop.model.product.enums.SortBy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,16 +38,36 @@ public class ProductListPageServletTest {
 
     @Before
     public void setup() {
-        when(arrayListProductDao.findProducts()).thenReturn(products);
+        when(request.getParameter("sort")).thenReturn("DESCRIPTION");
+        when(request.getParameter("order")).thenReturn("ASC");
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
     @Test
     public void testDoGet() throws ServletException, IOException {
+        String query = "samsung";
+        when(arrayListProductDao.findProducts(query,OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(request.getParameter("query")).thenReturn(query);
+
         servlet.doGet(request, response);
-        verify(arrayListProductDao).findProducts();
+
+        verify(arrayListProductDao).findProducts(eq(query),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);
     }
+
+    @Test
+    public void testDoGetQueryNull() throws ServletException, IOException {
+        when(arrayListProductDao.findProducts("",OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(request.getParameter("query")).thenReturn(null);
+
+        servlet.doGet(request, response);
+
+        verify(arrayListProductDao).findProducts(eq(""),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
+        verify(request, times(1)).setAttribute(eq("products"), eq(products));
+        verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
+        verify(requestDispatcher).forward(request, response);
+    }
+
 }
