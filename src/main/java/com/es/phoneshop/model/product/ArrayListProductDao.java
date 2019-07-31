@@ -3,7 +3,6 @@ package com.es.phoneshop.model.product;
 import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.util.*;
 import java.util.function.Function;
@@ -95,7 +94,7 @@ public class ArrayListProductDao implements ProductDao {
         products.removeIf(product -> product.getId().equals(id));
     }
 
-    protected void setProducts(List<Product> products) {
+    public void setProducts(List<Product> products) {
         this.products = products;
     }
 }

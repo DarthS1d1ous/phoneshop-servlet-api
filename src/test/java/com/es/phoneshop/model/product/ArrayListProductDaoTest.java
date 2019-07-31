@@ -53,43 +53,43 @@ public class ArrayListProductDaoTest {
     @Test
     public void testFindProducts() {
         List<Product> products = productDao.findProducts();
-        assertEquals(product1,products.get(0));
-        assertEquals(product2,products.get(1));
+        assertEquals(product1, products.get(0));
+        assertEquals(product2, products.get(1));
     }
 
     @Test
     public void testFindProductsByQuery() {
         List<Product> products = productDao.findProducts("s o p");
-        assertEquals(product2,products.get(0));
-        assertEquals(product1,products.get(1));
+        assertEquals(product2, products.get(0));
+        assertEquals(product1, products.get(1));
     }
 
     @Test
     public void testFindProductByDescriptionAsk() {
         List<Product> products = productDao.findProducts("", OutputOrder.ASC, SortBy.DESCRIPTION);
-        assertEquals(product2,products.get(0));
-        assertEquals(product1,products.get(1));
+        assertEquals(product2, products.get(0));
+        assertEquals(product1, products.get(1));
     }
 
     @Test
     public void testFindProductByDescriptionDesc() {
         List<Product> products = productDao.findProducts("", OutputOrder.DESC, SortBy.DESCRIPTION);
-        assertEquals(product2,products.get(1));
-        assertEquals(product1,products.get(0));
+        assertEquals(product2, products.get(1));
+        assertEquals(product1, products.get(0));
     }
 
     @Test
     public void testFindProductByPriceAsk() {
         List<Product> products = productDao.findProducts("", OutputOrder.ASC, SortBy.PRICE);
-        assertEquals(product1,products.get(0));
-        assertEquals(product2,products.get(1));
+        assertEquals(product1, products.get(0));
+        assertEquals(product2, products.get(1));
     }
 
     @Test
     public void testFindProductByPriceDesc() {
         List<Product> products = productDao.findProducts("", OutputOrder.DESC, SortBy.PRICE);
-        assertEquals(product1,products.get(1));
-        assertEquals(product2,products.get(0));
+        assertEquals(product1, products.get(1));
+        assertEquals(product2, products.get(0));
     }
 
     @Test(expected = ProductNotFoundException.class)

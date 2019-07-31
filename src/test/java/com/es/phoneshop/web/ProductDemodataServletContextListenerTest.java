@@ -20,6 +20,6 @@ public class ProductDemodataServletContextListenerTest {
     @Test
     public void testContextInitialized() {
         productDemodataServletContextListener.contextInitialized(servletContextEvent);
-        assertEquals(ArrayListProductDao.getInstance().findProducts().size(),12);
+        assertEquals(ArrayListProductDao.getInstance().findProducts().size(), 12);
     }
 }

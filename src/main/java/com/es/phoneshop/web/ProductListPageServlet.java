@@ -19,10 +19,13 @@ public class ProductListPageServlet extends HttpServlet {
     private static final String SORT = "sort";
 
     private ArrayListProductDao arrayListProductDao;
+    private HistoryService historyService;
+
 
     @Override
     public void init() {
         this.arrayListProductDao = ArrayListProductDao.getInstance();
+        this.historyService = HttpSessionHistoryService.getInstance();
     }
 
     @Override
@@ -40,6 +43,7 @@ public class ProductListPageServlet extends HttpServlet {
             query = "";
         }
         request.setAttribute("products", arrayListProductDao.findProducts(query, outputOrder, sortBy));
+        historyService.update(request, null);
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

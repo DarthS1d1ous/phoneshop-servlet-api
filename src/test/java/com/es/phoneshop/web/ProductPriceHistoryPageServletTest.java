@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.product.history.HistoryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,8 @@ public class ProductPriceHistoryPageServletTest {
     private ArrayListProductDao arrayListProductDao;
     @Mock
     private Product product;
+    @Mock
+    private HistoryService historyService;
     @InjectMocks
     private ProductPriceHistoryPageServlet servlet;
 
@@ -50,6 +53,7 @@ public class ProductPriceHistoryPageServletTest {
 
         servlet.doGet(request, response);
 
+        verify(historyService).update(request, null);
         verify(request).setAttribute(eq("product"), eq(product));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp");
         verify(requestDispatcher).forward(request, response);

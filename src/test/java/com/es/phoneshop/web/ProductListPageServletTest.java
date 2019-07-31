@@ -4,6 +4,7 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
+import com.es.phoneshop.model.product.history.HistoryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +34,8 @@ public class ProductListPageServletTest {
     private List<Product> products;
     @Mock
     private ArrayListProductDao arrayListProductDao;
+    @Mock
+    private HistoryService historyService;
     @InjectMocks
     private ProductListPageServlet servlet;
 
@@ -52,6 +55,7 @@ public class ProductListPageServletTest {
         servlet.doGet(request, response);
 
         verify(arrayListProductDao).findProducts(eq(query),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
+        verify(historyService).update(request,null);
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);
