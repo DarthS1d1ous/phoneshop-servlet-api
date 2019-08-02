@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 
 public class HttpSessionCartService implements CartService {
     protected static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class + ".cart";
+    private ArrayListProductDao arrayListProductDao = ArrayListProductDao.getInstance();
 
     private HttpSessionCartService() {
     }
@@ -47,7 +48,7 @@ public class HttpSessionCartService implements CartService {
         BigDecimal totalCost = new BigDecimal(0);
         int totalQuantity = 0;
         for (CartItem cartItem : cart.getCartItems()) {
-            totalCost = totalCost.add(ArrayListProductDao.getInstance().getProduct(cartItem.getProductId()).getPrice()
+            totalCost = totalCost.add(arrayListProductDao.getProduct(cartItem.getProductId()).getPrice()
                     .multiply(new BigDecimal(cartItem.getQuantity())));
             totalQuantity += cartItem.getQuantity();
         }

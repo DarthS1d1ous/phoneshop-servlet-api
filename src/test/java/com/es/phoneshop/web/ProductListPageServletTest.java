@@ -4,7 +4,7 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
-import com.es.phoneshop.model.product.history.HistoryService;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,9 @@ public class ProductListPageServletTest {
     @Mock
     private ArrayListProductDao arrayListProductDao;
     @Mock
-    private HistoryService historyService;
+    private RecentlyViewedService recentlyViewedService;
+    @Mock
+    private List<Product> recentlyViewedProducts;
     @InjectMocks
     private ProductListPageServlet servlet;
 
@@ -51,11 +53,13 @@ public class ProductListPageServletTest {
         String query = "samsung";
         when(arrayListProductDao.findProducts(query,OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(query);
+        when(recentlyViewedService.getRecentlyViewed(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
+        verify(request).setAttribute("recentlyViewed", recentlyViewedProducts);
         verify(arrayListProductDao).findProducts(eq(query),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
-        verify(historyService).update(request,null);
+        verify(recentlyViewedService).getRecentlyViewed(request);
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);

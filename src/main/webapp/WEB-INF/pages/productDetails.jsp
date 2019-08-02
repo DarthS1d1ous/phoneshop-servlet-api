@@ -50,5 +50,5 @@
         </form>
     </div>
 
-    <tags:history/>
+    <tags:recentlyViewed/>
 </tags:master>

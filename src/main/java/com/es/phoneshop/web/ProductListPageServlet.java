@@ -1,10 +1,11 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
-import com.es.phoneshop.model.product.history.HistoryService;
-import com.es.phoneshop.model.product.history.HttpSessionHistoryService;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
+import com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService;
 
 
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 
 public class ProductListPageServlet extends HttpServlet {
@@ -19,17 +21,18 @@ public class ProductListPageServlet extends HttpServlet {
     private static final String SORT = "sort";
 
     private ArrayListProductDao arrayListProductDao;
-    private HistoryService historyService;
+    private RecentlyViewedService recentlyViewedService;
 
 
     @Override
     public void init() {
         this.arrayListProductDao = ArrayListProductDao.getInstance();
-        this.historyService = HttpSessionHistoryService.getInstance();
+        this.recentlyViewedService = HttpSessionRecentlyViewedService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
         String query = request.getParameter("query");
         OutputOrder outputOrder = OutputOrder.ASC;
         if (request.getParameter(ORDER) != null) {
@@ -42,8 +45,8 @@ public class ProductListPageServlet extends HttpServlet {
         if (query == null) {
             query = "";
         }
+        request.setAttribute("recentlyViewed", recentlyViewedProducts);
         request.setAttribute("products", arrayListProductDao.findProducts(query, outputOrder, sortBy));
-        historyService.update(request, null);
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
 

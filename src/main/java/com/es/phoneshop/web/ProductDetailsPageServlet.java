@@ -7,8 +7,8 @@ import com.es.phoneshop.model.product.Cart.HttpSessionCartService;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.history.HistoryService;
-import com.es.phoneshop.model.product.history.HttpSessionHistoryService;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
+import com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService;
 
 
 import javax.servlet.ServletException;
@@ -18,26 +18,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private ArrayListProductDao arrayListProductDao;
     private CartService cartService;
-    private HistoryService historyService;
+    private RecentlyViewedService recentlyViewedService;
 
 
     @Override
     public void init() {
         this.arrayListProductDao = ArrayListProductDao.getInstance();
         this.cartService = HttpSessionCartService.getInstance();
-        this.historyService = HttpSessionHistoryService.getInstance();
+        this.recentlyViewedService = HttpSessionRecentlyViewedService.getInstance();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
         try {
             Cart cart = cartService.getCart(request);
             request.setAttribute("cart", cart);
-            historyService.update(request, getProductFromPath(request).getId());
+            recentlyViewedService.addRecentlyViewedProduct(recentlyViewedProducts, getProductFromPath(request).getId());
+            request.setAttribute("recentlyViewed", recentlyViewedProducts);
             request.setAttribute("product", getProductFromPath(request));
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException e) {

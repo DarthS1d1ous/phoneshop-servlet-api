@@ -3,7 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.history.HistoryService;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,7 +37,9 @@ public class ProductPriceHistoryPageServletTest {
     @Mock
     private Product product;
     @Mock
-    private HistoryService historyService;
+    private RecentlyViewedService recentlyViewedService;
+    @Mock
+    private List<Product> recentlyViewedProducts;
     @InjectMocks
     private ProductPriceHistoryPageServlet servlet;
 
@@ -50,10 +53,12 @@ public class ProductPriceHistoryPageServletTest {
         Long correctId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + correctId);
         when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
+        when(recentlyViewedService.getRecentlyViewed(request)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
-        verify(historyService).update(request, null);
+        verify(request).setAttribute("recentlyViewed", recentlyViewedProducts);
+        verify(recentlyViewedService).getRecentlyViewed(request);
         verify(request).setAttribute(eq("product"), eq(product));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp");
         verify(requestDispatcher).forward(request, response);

@@ -42,5 +42,5 @@
       </tr>
     </c:forEach>
   </table>
-  <tags:history/>
+  <tags:recentlyViewed/>
 </tags:master>

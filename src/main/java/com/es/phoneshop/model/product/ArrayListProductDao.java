@@ -94,7 +94,7 @@ public class ArrayListProductDao implements ProductDao {
         products.removeIf(product -> product.getId().equals(id));
     }
 
-    public void setProducts(List<Product> products) {
+    protected void setProducts(List<Product> products) {
         this.products = products;
     }
 }
