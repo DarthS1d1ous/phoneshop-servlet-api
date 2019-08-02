@@ -42,7 +42,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             recentlyViewedService.addRecentlyViewedProduct(recentlyViewedProducts, getProductFromPath(request).getId());
             request.setAttribute("recentlyViewed", recentlyViewedProducts);
             request.setAttribute("product", getProductFromPath(request));
-            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException e) {
             response.setStatus(404);
             request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);

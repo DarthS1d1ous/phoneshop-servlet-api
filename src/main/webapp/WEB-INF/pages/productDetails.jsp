@@ -5,7 +5,6 @@
 
 <jsp:useBean id="product" type="com.es.phoneshop.model.product.Product" scope="request"/>
 <tags:master pageTitle="Product">
-    <p>${cart.getCartItems()}</p>
     <c:if test="${not empty param.error}">
         <p class="error">Error</p>
     </c:if>

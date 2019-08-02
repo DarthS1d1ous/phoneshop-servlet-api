@@ -36,11 +36,22 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, Product product, int quantity) throws OutOfStockException, ProductNotFoundException {
-        if (quantity > product.getStock()) {
+        int totalProductQuantity = 0;
+        CartItem currentCartItem = null;
+        for (CartItem cartItem : cart.getCartItems()) {
+            if (cartItem.getProductId().equals(product.getId())) {
+                totalProductQuantity = cartItem.getQuantity();
+                currentCartItem = cartItem;
+            }
+        }
+        if (quantity + totalProductQuantity > product.getStock()) {
             throw new OutOfStockException(product.getStock());
         }
-        product.setStock(product.getStock() - quantity);
-        cart.getCartItems().add(new CartItem(product.getId(), quantity));
+        if (currentCartItem != null) {
+            currentCartItem.setQuantity(currentCartItem.getQuantity() + quantity);
+        } else {
+            cart.getCartItems().add(new CartItem(product.getId(), quantity));
+        }
         recalculateCart(cart);
     }
 

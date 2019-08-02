@@ -28,4 +28,13 @@ public class Cart {
     public void setTotalQuantity(int totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "cartItems=" + cartItems +
+                ", totalCost=" + totalCost +
+                ", totalQuantity=" + totalQuantity +
+                '}';
+    }
 }
