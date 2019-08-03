@@ -15,6 +15,7 @@ header img {
 table {
   border-collapse: collapse;
   border : 1px solid gray;
+  margin-bottom: 10px;
 }
 td {
   padding: 10px;
@@ -23,6 +24,12 @@ td {
 }
 .price {
   text-align: right;
+}
+.error {
+  color: red;
+}
+.good {
+  color: green;
 }
 img.product-tile {
   max-width: 64px;

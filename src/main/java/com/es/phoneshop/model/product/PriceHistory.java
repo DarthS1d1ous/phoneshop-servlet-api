@@ -1,10 +1,10 @@
 package com.es.phoneshop.model.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-public class PriceHistory {
+public class PriceHistory implements Serializable {
     private Date date;
     private BigDecimal price;
 

@@ -3,6 +3,7 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +15,10 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -29,16 +32,25 @@ public class ProductPriceHistoryPageServletTest {
     @Mock
     private HttpServletResponse response;
     @Mock
+    private HttpSession session;
+    @Mock
     private RequestDispatcher requestDispatcher;
     @Mock
     private ArrayListProductDao arrayListProductDao;
     @Mock
     private Product product;
+    @Mock
+    private RecentlyViewedService recentlyViewedService;
+    private List<Product> recentlyViewedProducts;
     @InjectMocks
     private ProductPriceHistoryPageServlet servlet;
 
+    public ProductPriceHistoryPageServletTest() {
+    }
+
     @Before
     public void setup() {
+        when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
     }
 
@@ -47,9 +59,12 @@ public class ProductPriceHistoryPageServletTest {
         Long correctId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + correctId);
         when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
+        when(recentlyViewedService.getRecentlyViewed(session)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
+        verify(request).setAttribute("recentlyViewed", recentlyViewedProducts);
+        verify(recentlyViewedService).getRecentlyViewed(session);
         verify(request).setAttribute(eq("product"), eq(product));
         verify(request).getRequestDispatcher("/WEB-INF/pages/productPriceHistory.jsp");
         verify(requestDispatcher).forward(request, response);
