@@ -35,12 +35,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
+        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request.getSession());
         try {
-            Cart cart = cartService.getCart(request);
+            Cart cart = cartService.getCart(request.getSession());
             request.setAttribute("cart", cart);
             recentlyViewedService.addRecentlyViewedProduct(recentlyViewedProducts, getProductFromPath(request).getId());
-            recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
             request.setAttribute("recentlyViewed", recentlyViewedProducts);
             request.setAttribute("product", getProductFromPath(request));
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
@@ -52,7 +51,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cart cart = cartService.getCart(request);
+        Cart cart = cartService.getCart(request.getSession());
 
         try {
             int quantity = NumberFormat.getInstance(request.getLocale()).parse(request.getParameter("quantity")).intValue();

@@ -32,7 +32,7 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
+        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request.getSession());
         String query = request.getParameter("query");
         OutputOrder outputOrder = OutputOrder.ASC;
         if (request.getParameter(ORDER) != null) {

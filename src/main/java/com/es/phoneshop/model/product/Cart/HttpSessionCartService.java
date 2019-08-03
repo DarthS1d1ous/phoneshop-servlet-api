@@ -1,12 +1,11 @@
 package com.es.phoneshop.model.product.Cart;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.OutOfStockException;
-import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.Optional;
 
 public class HttpSessionCartService implements CartService {
     protected static final String CART_SESSION_ATTRIBUTE = HttpSessionCartService.class + ".cart";
@@ -24,30 +23,26 @@ public class HttpSessionCartService implements CartService {
 
 
     @Override
-    public Cart getCart(HttpServletRequest request) {
-        Cart result = (Cart) request.getSession().getAttribute(CART_SESSION_ATTRIBUTE);
+    public Cart getCart(HttpSession session) {
+        Cart result = (Cart) session.getAttribute(CART_SESSION_ATTRIBUTE);
         if (result == null) {
             result = new Cart();
-            request.getSession().setAttribute(CART_SESSION_ATTRIBUTE, result);
+            session.setAttribute(CART_SESSION_ATTRIBUTE, result);
         }
         return result;
     }
 
     @Override
     public void add(Cart cart, Product product, int quantity) throws OutOfStockException {
-        CartItem currentCartItem = cart.getCartItems().stream()
+        Optional<CartItem> currentCartItemOptional = cart.getCartItems().stream()
                 .filter(x -> x.getProductId().equals(product.getId()))
-                .findFirst()
-                .orElse(null);
-        int totalProductQuantity = 0;
-        if (currentCartItem != null) {
-            totalProductQuantity = currentCartItem.getQuantity();
-        }
-        if (quantity + totalProductQuantity > product.getStock()) {
+                .findFirst();
+        int currentProductQuantity = currentCartItemOptional.map(CartItem::getQuantity).orElse(0);
+        if (quantity + currentProductQuantity > product.getStock() || quantity < 0) {
             throw new OutOfStockException(product.getStock());
         }
-        if (currentCartItem != null) {
-            currentCartItem.setQuantity(currentCartItem.getQuantity() + quantity);
+        if (currentCartItemOptional.isPresent()) {
+            currentCartItemOptional.get().setQuantity(currentProductQuantity + quantity);
         } else {
             cart.getCartItems().add(new CartItem(product.getId(), quantity));
         }

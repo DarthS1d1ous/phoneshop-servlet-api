@@ -23,8 +23,6 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class HttpSessionCartServiceTest {
     @Mock
-    private HttpServletRequest request;
-    @Mock
     private Cart cart1;
     @Mock
     private Cart cart2;
@@ -45,7 +43,6 @@ public class HttpSessionCartServiceTest {
 
     @Before
     public void setup() {
-        when(request.getSession()).thenReturn(session);
         when(session.getAttribute(CART_SESSION_ATTRIBUTE)).thenReturn(cart1);
 
         setupProduct(product1, 1L, 5, new BigDecimal(5));
@@ -84,7 +81,7 @@ public class HttpSessionCartServiceTest {
 
     @Test
     public void testGetCart() {
-        cart2 = httpSessionCartService.getCart(request);
+        cart2 = httpSessionCartService.getCart(session);
 
         assertEquals(cart1, cart2);
     }
@@ -93,9 +90,8 @@ public class HttpSessionCartServiceTest {
     public void testGetNullCart() {
         when(session.getAttribute(CART_SESSION_ATTRIBUTE)).thenReturn(null);
 
-        httpSessionCartService.getCart(request);
+        httpSessionCartService.getCart(session);
 
-        verify(request, times(2)).getSession();
         verify(session).getAttribute(CART_SESSION_ATTRIBUTE);
     }
 

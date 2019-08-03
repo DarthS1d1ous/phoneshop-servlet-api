@@ -26,7 +26,7 @@ public class ProductPriceHistoryPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
+        List<Product> recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request.getSession());
         try {
             request.setAttribute("recentlyViewed", recentlyViewedProducts);
             Long productId = Long.valueOf(request.getPathInfo().substring(1));

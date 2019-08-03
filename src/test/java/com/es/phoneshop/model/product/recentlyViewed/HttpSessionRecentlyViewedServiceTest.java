@@ -10,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +21,6 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpSessionRecentlyViewedServiceTest {
-    @Mock
-    private HttpServletRequest request;
     @Mock
     private HttpSession session;
     private List<Product> recentlyViewedProducts1 = new ArrayList<>();
@@ -43,7 +40,6 @@ public class HttpSessionRecentlyViewedServiceTest {
     @Before
     public void setup() throws ProductNotFoundException {
         when(session.getAttribute(HISTORY_SESSION_ATTRIBUTE)).thenReturn(recentlyViewedProducts1);
-        when(request.getSession()).thenReturn(session);
         when(arrayListProductDao.getProduct(4L)).thenReturn(product);
         when(arrayListProductDao.getProduct(2L)).thenReturn(product2);
 
@@ -87,15 +83,14 @@ public class HttpSessionRecentlyViewedServiceTest {
     public void testGetNullRecentlyViewed() {
         when(session.getAttribute(HISTORY_SESSION_ATTRIBUTE)).thenReturn(null);
 
-        httpSessionHistoryService.getRecentlyViewed(request);
+        httpSessionHistoryService.getRecentlyViewed(session);
 
-        verify(request).getSession();
         verify(session).getAttribute(HISTORY_SESSION_ATTRIBUTE);
     }
 
     @Test
     public void testGetRecentlyViewed() {
-        List<Product> recentlyViewedProducts2 = httpSessionHistoryService.getRecentlyViewed(request);
+        List<Product> recentlyViewedProducts2 = httpSessionHistoryService.getRecentlyViewed(session);
 
         assertEquals(recentlyViewedProducts1, recentlyViewedProducts2);
     }

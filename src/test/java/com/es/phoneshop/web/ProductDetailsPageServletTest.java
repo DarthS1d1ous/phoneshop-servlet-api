@@ -18,6 +18,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,6 +32,8 @@ import static org.mockito.Mockito.*;
 public class ProductDetailsPageServletTest {
     @Mock
     private HttpServletRequest request;
+    @Mock
+    private HttpSession session;
     @Mock
     private HttpServletResponse response;
     @Mock
@@ -54,6 +57,7 @@ public class ProductDetailsPageServletTest {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
         when(request.getLocale()).thenReturn(Locale.ENGLISH);
         when(request.getParameter("quantity")).thenReturn("1");
+        when(request.getSession()).thenReturn(session);
     }
 
     @Test
@@ -61,8 +65,8 @@ public class ProductDetailsPageServletTest {
         Long correctId = product.getId();
         when(request.getPathInfo()).thenReturn("/" + correctId);
         when(arrayListProductDao.getProduct(correctId)).thenReturn(product);
-        when(cartService.getCart(request)).thenReturn(cart);
-        when(recentlyViewedService.getRecentlyViewed(request)).thenReturn(recentlyViewedProducts);
+        when(cartService.getCart(session)).thenReturn(cart);
+        when(recentlyViewedService.getRecentlyViewed(session)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
@@ -91,7 +95,7 @@ public class ProductDetailsPageServletTest {
     @Test
     public void testDoPost() throws ServletException, IOException, OutOfStockException {
         when(request.getPathInfo()).thenReturn("/1");
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(session)).thenReturn(cart);
         when(servlet.getProductFromPath(request)).thenReturn(product);
         when(request.getRequestURI()).thenReturn("http://localhost:8080/phoneshop-servlet-api/products/1");
 
@@ -114,7 +118,7 @@ public class ProductDetailsPageServletTest {
 
     @Test
     public void testDoPostOutOfStockException() throws ServletException, IOException, OutOfStockException {
-        when(cartService.getCart(request)).thenReturn(cart);
+        when(cartService.getCart(session)).thenReturn(cart);
         doThrow(OutOfStockException.class).when(cartService).add(cart, product, 1);
         when(request.getPathInfo()).thenReturn("/1");
         when(servlet.getProductFromPath(request)).thenReturn(product);

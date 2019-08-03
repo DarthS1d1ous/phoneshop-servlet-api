@@ -65,6 +65,14 @@ public class ArrayListProductDaoTest {
     }
 
     @Test
+    public void testFindProductByNullSortBy() {
+        List<Product> products = productDao.findProducts("", OutputOrder.DESC, null);
+        assertEquals(product1, products.get(0));
+        assertEquals(product2, products.get(1));
+
+    }
+
+    @Test
     public void testFindProductByDescriptionAsk() {
         List<Product> products = productDao.findProducts("", OutputOrder.ASC, SortBy.DESCRIPTION);
         assertEquals(product2, products.get(0));

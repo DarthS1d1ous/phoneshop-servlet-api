@@ -4,7 +4,6 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewedService {
         public static final HttpSessionRecentlyViewedService instance = new HttpSessionRecentlyViewedService();
     }
 
+    @Override
     public void addRecentlyViewedProduct(List<Product> recentlyViewedProducts, Long productId) throws ProductNotFoundException {
         Product product = arrayListProductDao.getProduct(productId);
         recentlyViewedProducts.remove(product);
@@ -32,8 +32,7 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewedService {
     }
 
     @Override
-    public List<Product> getRecentlyViewed(HttpServletRequest request) {
-        HttpSession session = request.getSession();
+    public List<Product> getRecentlyViewed(HttpSession session) {
         List<Product> recentlyViewedProducts = (List<Product>) session.getAttribute(HISTORY_SESSION_ATTRIBUTE);
         if (recentlyViewedProducts == null) {
             recentlyViewedProducts = new ArrayList<>();
