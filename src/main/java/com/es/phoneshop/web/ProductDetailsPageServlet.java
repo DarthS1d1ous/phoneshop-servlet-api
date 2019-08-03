@@ -40,9 +40,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Cart cart = cartService.getCart(request);
             request.setAttribute("cart", cart);
             recentlyViewedService.addRecentlyViewedProduct(recentlyViewedProducts, getProductFromPath(request).getId());
+            recentlyViewedProducts = recentlyViewedService.getRecentlyViewed(request);
             request.setAttribute("recentlyViewed", recentlyViewedProducts);
             request.setAttribute("product", getProductFromPath(request));
-                request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException e) {
             response.setStatus(404);
             request.getRequestDispatcher("/WEB-INF/pages/productNotFound.jsp").forward(request, response);

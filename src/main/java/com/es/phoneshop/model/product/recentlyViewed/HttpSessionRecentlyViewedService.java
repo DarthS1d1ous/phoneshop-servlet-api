@@ -24,19 +24,9 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewedService {
 
     public void addRecentlyViewedProduct(List<Product> recentlyViewedProducts, Long productId) throws ProductNotFoundException {
         Product product = arrayListProductDao.getProduct(productId);
-        int i;
-        for (i = 0; i < recentlyViewedProducts.size(); i++) {
-            if (recentlyViewedProducts.get(i).getId().equals(product.getId())) {
-                Product temp = recentlyViewedProducts.get(i);
-                recentlyViewedProducts.remove(i);
-                recentlyViewedProducts.add(0,temp);
-                break;
-            }
-        }
-        if (i == recentlyViewedProducts.size()) {
-            recentlyViewedProducts.add(0, product);
-        }
-        if (i == MAX_RECENTLY_VIEWED_SIZE) {
+        recentlyViewedProducts.remove(product);
+        recentlyViewedProducts.add(0, product);
+        if (recentlyViewedProducts.size() > MAX_RECENTLY_VIEWED_SIZE) {
             recentlyViewedProducts.remove(MAX_RECENTLY_VIEWED_SIZE);
         }
     }
@@ -44,10 +34,10 @@ public class HttpSessionRecentlyViewedService implements RecentlyViewedService {
     @Override
     public List<Product> getRecentlyViewed(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        List<Product> recentlyViewedProducts =(List<Product>) session.getAttribute(HISTORY_SESSION_ATTRIBUTE);
+        List<Product> recentlyViewedProducts = (List<Product>) session.getAttribute(HISTORY_SESSION_ATTRIBUTE);
         if (recentlyViewedProducts == null) {
             recentlyViewedProducts = new ArrayList<>();
-           session.setAttribute(HISTORY_SESSION_ATTRIBUTE, recentlyViewedProducts);
+            session.setAttribute(HISTORY_SESSION_ATTRIBUTE, recentlyViewedProducts);
         }
         return recentlyViewedProducts;
     }

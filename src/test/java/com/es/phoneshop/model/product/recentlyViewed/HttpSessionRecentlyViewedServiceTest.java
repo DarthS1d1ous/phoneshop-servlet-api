@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService.HISTORY_SESSION_ATTRIBUTE;
@@ -25,10 +26,7 @@ public class HttpSessionRecentlyViewedServiceTest {
     private HttpServletRequest request;
     @Mock
     private HttpSession session;
-    @Mock
-    private List<Product> recentlyViewedProducts1;
-    @Mock
-    private List<Product> recentlyViewedProducts2;
+    private List<Product> recentlyViewedProducts1 = new ArrayList<>();
     @Mock
     private ArrayListProductDao arrayListProductDao;
     @Mock
@@ -44,57 +42,45 @@ public class HttpSessionRecentlyViewedServiceTest {
 
     @Before
     public void setup() throws ProductNotFoundException {
-        Long productId = 4L;
         when(session.getAttribute(HISTORY_SESSION_ATTRIBUTE)).thenReturn(recentlyViewedProducts1);
         when(request.getSession()).thenReturn(session);
-        when(arrayListProductDao.getProduct(productId)).thenReturn(product);
-        when(recentlyViewedProducts1.get(0)).thenReturn(product1);
-        when(recentlyViewedProducts1.get(1)).thenReturn(product2);
-        when(recentlyViewedProducts1.get(2)).thenReturn(product3);
-        when(recentlyViewedProducts1.size()).thenReturn(3);
+        when(arrayListProductDao.getProduct(4L)).thenReturn(product);
+        when(arrayListProductDao.getProduct(2L)).thenReturn(product2);
+
+        recentlyViewedProducts1.add(product1);
+        recentlyViewedProducts1.add(product2);
+        recentlyViewedProducts1.add(product3);
     }
 
     @Test
     public void testAddFirstRecentlyViewedProduct() throws ProductNotFoundException {
-        Long productId = 1L;
-        when(recentlyViewedProducts1.size()).thenReturn(0);
+        Long productId = 4L;
         when(arrayListProductDao.getProduct(productId)).thenReturn(product);
+        recentlyViewedProducts1.clear();
 
         httpSessionHistoryService.addRecentlyViewedProduct(recentlyViewedProducts1, productId);
 
-        verify(recentlyViewedProducts1).add(0, product);
+        assertEquals(recentlyViewedProducts1.get(0), product);
     }
 
     @Test
     public void testAddRecentlyViewedProductInFull() throws ProductNotFoundException {
         Long productId = 4L;
-        setupProductId(product, 4L);
-        setupProductId(product1, 1L);
-        setupProductId(product2, 2L);
-        setupProductId(product3, 3L);
 
         httpSessionHistoryService.addRecentlyViewedProduct(recentlyViewedProducts1, productId);
 
-        verify(recentlyViewedProducts1).add(0, product);
-        verify(recentlyViewedProducts1).remove(3);
+        assertEquals(recentlyViewedProducts1.get(0), product);
+        assertEquals(recentlyViewedProducts1.size(), 3);
     }
 
     @Test
     public void testAddSameRecentlyViewedProduct() throws ProductNotFoundException {
-        Long productId = 4L;
-        setupProductId(product, 2L);
-        setupProductId(product1, 1L);
-        setupProductId(product2, 2L);
-        setupProductId(product3, 3L);
+        Long productId = 2L;
 
         httpSessionHistoryService.addRecentlyViewedProduct(recentlyViewedProducts1, productId);
 
-        verify(recentlyViewedProducts1).add(0, product2);
-        verify(recentlyViewedProducts1).remove(1);
-    }
-
-    private void setupProductId(Product product, Long productId) {
-        when(product.getId()).thenReturn(productId);
+        assertEquals(recentlyViewedProducts1.get(0), product2);
+        assertEquals(recentlyViewedProducts1.size(), 3);
     }
 
     @Test
@@ -109,7 +95,7 @@ public class HttpSessionRecentlyViewedServiceTest {
 
     @Test
     public void testGetRecentlyViewed() {
-        recentlyViewedProducts2 = httpSessionHistoryService.getRecentlyViewed(request);
+        List<Product> recentlyViewedProducts2 = httpSessionHistoryService.getRecentlyViewed(request);
 
         assertEquals(recentlyViewedProducts1, recentlyViewedProducts2);
     }

@@ -1,9 +1,7 @@
 package com.es.phoneshop.model.product.Cart;
 
-import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.OutOfStockException;
-import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,8 +34,6 @@ public class HttpSessionCartServiceTest {
     private CartItem cartItem2;
     @Mock
     private HttpSession session;
-    @Mock
-    private ArrayListProductDao arrayListProductDao;
     @Mock
     private Product product1;
     @Mock
@@ -75,15 +71,12 @@ public class HttpSessionCartServiceTest {
     }
 
     @Test
-    public void testAdd() throws OutOfStockException, ProductNotFoundException {
-        when(arrayListProductDao.getProduct(product1.getId())).thenReturn(product1);
-        when(arrayListProductDao.getProduct(product2.getId())).thenReturn(product2);
-        when(arrayListProductDao.getProduct(product3.getId())).thenReturn(product3);
+    public void testAdd() throws OutOfStockException {
+        when(cart1.getTotalCost()).thenReturn(new BigDecimal(125));
 
         httpSessionCartService.add(cart1, product3, 15);
 
-        verify(product3, times(2)).setStock(product3.getStock() - 1);
-        verify(cart1, times(2)).getCartItems();
+        verify(cart1, times(3)).getCartItems();
         verify(cart1).setTotalCost(new BigDecimal(350));
         verify(cart1).setTotalQuantity(30);
 
@@ -108,7 +101,7 @@ public class HttpSessionCartServiceTest {
 
 
     @Test(expected = OutOfStockException.class)
-    public void testAddOutOfStockException() throws OutOfStockException, ProductNotFoundException {
+    public void testAddOutOfStockException() throws OutOfStockException {
         when(product1.getStock()).thenReturn(0);
 
         httpSessionCartService.add(cart1, product1, 1);

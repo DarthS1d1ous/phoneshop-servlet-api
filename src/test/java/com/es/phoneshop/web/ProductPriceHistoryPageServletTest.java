@@ -38,7 +38,6 @@ public class ProductPriceHistoryPageServletTest {
     private Product product;
     @Mock
     private RecentlyViewedService recentlyViewedService;
-    @Mock
     private List<Product> recentlyViewedProducts;
     @InjectMocks
     private ProductPriceHistoryPageServlet servlet;

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Cart {
     private List<CartItem> cartItems = new ArrayList<>();
-    private BigDecimal totalCost;
+    private BigDecimal totalCost = new BigDecimal(0);
     private int totalQuantity;
 
     public List<CartItem> getCartItems() {

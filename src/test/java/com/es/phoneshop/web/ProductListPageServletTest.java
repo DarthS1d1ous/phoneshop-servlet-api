@@ -30,7 +30,6 @@ public class ProductListPageServletTest {
     private HttpServletResponse response;
     @Mock
     private RequestDispatcher requestDispatcher;
-    @Mock
     private List<Product> products;
     @Mock
     private ArrayListProductDao arrayListProductDao;

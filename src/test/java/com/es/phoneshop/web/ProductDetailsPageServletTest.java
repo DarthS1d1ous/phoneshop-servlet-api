@@ -45,7 +45,6 @@ public class ProductDetailsPageServletTest {
     private CartService cartService;
     @Mock
     private RecentlyViewedService recentlyViewedService;
-    @Mock
     private List<Product> recentlyViewedProducts;
     @InjectMocks
     private ProductDetailsPageServlet servlet;
