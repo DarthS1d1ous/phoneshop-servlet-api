@@ -7,9 +7,8 @@ import com.es.phoneshop.model.product.Cart.HttpSessionCartService;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.OutOfStockException;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService;
-
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

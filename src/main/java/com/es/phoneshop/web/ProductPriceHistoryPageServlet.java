@@ -3,8 +3,8 @@ package com.es.phoneshop.web;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exceptions.ProductNotFoundException;
-import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService;
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

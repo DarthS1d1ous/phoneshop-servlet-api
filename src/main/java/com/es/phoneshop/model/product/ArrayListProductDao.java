@@ -42,20 +42,24 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public synchronized List<Product> findProducts(String query) {
-        String[] words = query
-                .trim()
-                .toLowerCase()
-                .split(" ");
+        if (query.equals("")) {
+            return findProducts();
+        } else {
+            String[] words = query
+                    .trim()
+                    .toLowerCase()
+                    .split(" ");
 
-        return products.stream()
-                .filter(product -> product.getPrice() != null && product.getStock() > 0)
-                .collect(Collectors.toMap(Function.identity(), product -> Arrays.stream(words)
-                        .filter(x -> product.getDescription().toLowerCase().contains(x)).count()))
-                .entrySet().stream()
-                .filter(x -> x.getValue() > 0)
-                .sorted(Comparator.comparing(Map.Entry<Product, Long>::getValue).reversed())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
+            return products.stream()
+                    .filter(product -> product.getPrice() != null && product.getStock() > 0)
+                    .collect(Collectors.toMap(Function.identity(), product -> Arrays.stream(words)
+                            .filter(x -> product.getDescription().toLowerCase().contains(x)).count()))
+                    .entrySet().stream()
+                    .filter(x -> x.getValue() > 0)
+                    .sorted(Comparator.comparing(Map.Entry<Product, Long>::getValue).reversed())
+                    .map(Map.Entry::getKey)
+                    .collect(Collectors.toList());
+        }
     }
 
     @Override
