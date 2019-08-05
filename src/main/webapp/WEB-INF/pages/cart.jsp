@@ -58,8 +58,8 @@
                     </tr>
                 </c:forEach>
             </table>
-            <c:if test="${not empty message}">
-                <p class="good">${message}</p>
+            <c:if test="${not empty param.message}">
+                <p class="good">${param.message}</p>
             </c:if>
             <button>Update</button>
         </form>

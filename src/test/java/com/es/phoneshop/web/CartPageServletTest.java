@@ -70,7 +70,7 @@ public class CartPageServletTest {
 
         servlet.doPost(request, response);
 
-        verify(request).setAttribute("message", "Update successfully");
+        verify(response).sendRedirect(request.getRequestURI()+"?message=Update successfully");
     }
 
     @Test

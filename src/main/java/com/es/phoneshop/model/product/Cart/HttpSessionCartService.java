@@ -52,7 +52,7 @@ public class HttpSessionCartService implements CartService {
     public void update(Cart cart, Long productId, int quantity) throws ProductNotFoundException, OutOfStockException {
         Product product = arrayListProductDao.getProduct(productId);
         Optional<CartItem> currentCartItemOptional = getCurrentCartItemOptional(cart, productId);
-        if (quantity > product.getStock() || quantity < 0) {
+        if (quantity > product.getStock() || quantity <= 0) {
             throw new OutOfStockException(product.getStock());
         }
         currentCartItemOptional.ifPresent(cartItem -> cartItem.setQuantity(quantity));
@@ -63,7 +63,7 @@ public class HttpSessionCartService implements CartService {
     public void add(Cart cart, Product product, int quantity) throws OutOfStockException {
         Optional<CartItem> currentCartItemOptional = getCurrentCartItemOptional(cart, product.getId());
         int currentProductQuantity = currentCartItemOptional.map(CartItem::getQuantity).orElse(0);
-        if (quantity + currentProductQuantity > product.getStock() || quantity < 0) {
+        if (quantity + currentProductQuantity > product.getStock() || quantity <= 0) {
             throw new OutOfStockException(product.getStock());
         }
         if (currentCartItemOptional.isPresent()) {

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class CartPageServlet extends HttpServlet {
     private CartService cartService;
@@ -34,29 +36,23 @@ public class CartPageServlet extends HttpServlet {
         String[] quantities = request.getParameterValues("quantity");
         String[] productsId = request.getParameterValues("productId");
         String[] errors = new String[productsId.length];
-        boolean hasError = false;
         for (int i = 0; i < productsId.length; i++) {
             int quantity;
             try {
                 quantity = NumberFormat.getInstance(request.getLocale()).parse(quantities[i]).intValue();
+                cartService.update(cart, Long.valueOf(productsId[i]), quantity);
             } catch (NumberFormatException | ParseException e) {
                 errors[i] = "Not a number";
-                hasError = true;
-                continue;
-            }
-            try {
-                cartService.update(cart, Long.valueOf(productsId[i]), quantity);
             } catch (OutOfStockException e) {
                 errors[i] = e.getMessage();
-                hasError = true;
             }
         }
-
+        boolean hasError = Arrays.stream(errors).anyMatch(Objects::nonNull);
         if (hasError) {
             request.setAttribute("errors", errors);
+            doGet(request, response);
         } else {
-            request.setAttribute("message", "Update successfully");
+            response.sendRedirect(request.getRequestURI() + "?message=Update successfully");
         }
-        doGet(request, response);
     }
 }
