@@ -4,9 +4,8 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.enums.OutputOrder;
 import com.es.phoneshop.model.product.enums.SortBy;
-import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 import com.es.phoneshop.model.product.recentlyViewed.HttpSessionRecentlyViewedService;
-
+import com.es.phoneshop.model.product.recentlyViewed.RecentlyViewedService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

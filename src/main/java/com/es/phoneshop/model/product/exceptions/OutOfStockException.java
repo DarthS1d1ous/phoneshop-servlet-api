@@ -7,6 +7,11 @@ public class OutOfStockException extends Exception {
         this.maxStock = maxStock;
     }
 
+    @Override
+    public String getMessage() {
+        return "Out of stock. Max stock is " + this.getMaxStock();
+    }
+
     public int getMaxStock() {
         return maxStock;
     }
