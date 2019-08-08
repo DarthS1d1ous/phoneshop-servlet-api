@@ -53,14 +53,14 @@ public class ProductListPageServletTest {
     @Test
     public void testDoGet() throws ServletException, IOException {
         String query = "samsung";
-        when(arrayListProductDao.findProducts(query,OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(arrayListProductDao.findProducts(query, OutputOrder.ASC, SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(query);
         when(recentlyViewedService.getRecentlyViewed(session)).thenReturn(recentlyViewedProducts);
 
         servlet.doGet(request, response);
 
         verify(request).setAttribute("recentlyViewed", recentlyViewedProducts);
-        verify(arrayListProductDao).findProducts(eq(query),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
+        verify(arrayListProductDao).findProducts(eq(query), eq(OutputOrder.ASC), eq(SortBy.DESCRIPTION));
         verify(recentlyViewedService).getRecentlyViewed(session);
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
@@ -69,12 +69,12 @@ public class ProductListPageServletTest {
 
     @Test
     public void testDoGetQueryNull() throws ServletException, IOException {
-        when(arrayListProductDao.findProducts("",OutputOrder.ASC,SortBy.DESCRIPTION)).thenReturn(products);
+        when(arrayListProductDao.findProducts("", OutputOrder.ASC, SortBy.DESCRIPTION)).thenReturn(products);
         when(request.getParameter("query")).thenReturn(null);
 
         servlet.doGet(request, response);
 
-        verify(arrayListProductDao).findProducts(eq(""),eq(OutputOrder.ASC),eq(SortBy.DESCRIPTION));
+        verify(arrayListProductDao).findProducts(eq(""), eq(OutputOrder.ASC), eq(SortBy.DESCRIPTION));
         verify(request, times(1)).setAttribute(eq("products"), eq(products));
         verify(request, times(1)).getRequestDispatcher("/WEB-INF/pages/productList.jsp");
         verify(requestDispatcher).forward(request, response);

@@ -10,4 +10,8 @@ public interface CartService {
     Cart getCart(HttpSession session);
 
     void add(Cart cart, Product product, int quantity) throws OutOfStockException, ProductNotFoundException;
+
+    void update(Cart cart, Long productId, int quantity) throws ProductNotFoundException, OutOfStockException;
+
+    void delete(Cart cart, Long productId);
 }
