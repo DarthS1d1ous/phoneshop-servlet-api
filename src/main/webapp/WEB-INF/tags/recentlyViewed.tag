@@ -14,7 +14,8 @@
                     ${recentlyViewedProduct.description}
             </a>
             <br>
-            <fmt:formatNumber value="${recentlyViewedProduct.price}" type="currency" currencySymbol="${recentlyViewedProduct.currency.symbol}"/>
+            <fmt:formatNumber value="${recentlyViewedProduct.price}" type="currency"
+                              currencySymbol="${recentlyViewedProduct.currency.symbol}"/>
         </td>
     </c:forEach>
     </thead>

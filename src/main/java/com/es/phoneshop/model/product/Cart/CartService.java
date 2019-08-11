@@ -14,4 +14,6 @@ public interface CartService {
     void update(Cart cart, Long productId, int quantity) throws ProductNotFoundException, OutOfStockException;
 
     void delete(Cart cart, Long productId);
+
+    void clearCart(HttpSession session);
 }

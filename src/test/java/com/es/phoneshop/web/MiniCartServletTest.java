@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.product.Cart.Cart;
 import com.es.phoneshop.model.product.Cart.CartService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -35,14 +36,28 @@ public class MiniCartServletTest {
     @InjectMocks
     private MiniCartServlet servlet;
 
-    @Test
-    public void testGoGet() throws ServletException, IOException {
+    @Before
+    public void setup() {
         when(request.getSession()).thenReturn(session);
         when(request.getRequestDispatcher("/WEB-INF/pages/miniCart.jsp")).thenReturn(requestDispatcher);
         when(cartService.getCart(session)).thenReturn(cart);
+    }
 
+    @Test
+    public void testGoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
 
+        testPostAndGet();
+    }
+
+    @Test
+    public void testGoPost() throws ServletException, IOException {
+        servlet.doPost(request, response);
+
+        testPostAndGet();
+    }
+
+    private void testPostAndGet() throws ServletException, IOException {
         verify(request).getSession();
         verify(cartService).getCart(session);
         verify(request).setAttribute("cart", cart);

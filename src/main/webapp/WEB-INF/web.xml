@@ -33,27 +33,27 @@
         <servlet-name>priceHistory</servlet-name>
         <servlet-class>com.es.phoneshop.web.ProductPriceHistoryPageServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>priceHistory</servlet-name>
         <url-pattern>/products/priceHistory/*</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>cart</servlet-name>
         <servlet-class>com.es.phoneshop.web.CartPageServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>cart</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
-    
+
     <servlet>
         <servlet-name>miniCart</servlet-name>
         <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>miniCart</servlet-name>
         <url-pattern>/miniCart</url-pattern>
@@ -68,10 +68,49 @@
         <servlet-name>deleteCartItem</servlet-name>
         <url-pattern>/cart/deleteCartItem/*</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet>
+        <servlet-name>checkout</servlet-name>
+        <servlet-class>com.es.phoneshop.web.CheckoutPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>checkout</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>orderOverview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.OrderOverviewPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>orderOverview</servlet-name>
+        <url-pattern>/orderOverview/*</url-pattern>
+    </servlet-mapping>
+
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/pages/productNotFound.jsp</location>
     </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/pages/orderNotFound.jsp</location>
+    </error-page>
+
+    <filter>
+        <filter-name>dosFilter</filter-name>
+        <filter-class>com.es.phoneshop.model.product.filter.DosFilter</filter-class>
+        <init-param>
+            <param-name>maxConnectionsPerMinute</param-name>
+            <param-value>20</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>dosFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
 </web-app>

@@ -7,8 +7,8 @@
     <a href="${pageContext.servletContext.contextPath}/cart">
         <img src="${pageContext.servletContext.contextPath}/images/cart.jpg">
     </a>
-        <c:if test="${not empty cart}">
-            Total quantity: ${cart.totalQuantity}
-            Total cost: ${cart.totalCost}
-        </c:if>
+    <c:if test="${not empty cart}">
+        Total quantity: ${cart.totalQuantity}
+        Total cost: ${cart.totalCost}
+    </c:if>
 </div>

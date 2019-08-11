@@ -10,6 +10,10 @@ public class Cart implements Serializable {
     private BigDecimal totalCost = new BigDecimal(0);
     private int totalQuantity;
 
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
+
     public List<CartItem> getCartItems() {
         return cartItems;
     }
