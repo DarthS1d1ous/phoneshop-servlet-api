@@ -96,7 +96,6 @@ public class ProductDetailsPageServletTest {
         when(request.getPathInfo()).thenReturn("/1");
         when(cartService.getCart(session)).thenReturn(cart);
         when(servlet.getProductFromPath(request)).thenReturn(product);
-        when(request.getRequestURI()).thenReturn("http://localhost:8080/phoneshop-servlet-api/products/1");
 
         servlet.doPost(request, response);
 
@@ -107,7 +106,6 @@ public class ProductDetailsPageServletTest {
     @Test
     public void testDoPostNumberFormatException() throws ServletException, IOException {
         when(request.getPathInfo()).thenReturn("1");
-        when(request.getRequestURI()).thenReturn("http://localhost:8080/phoneshop-servlet-api/products/1");
 
         servlet.doPost(request, response);
 
@@ -121,7 +119,6 @@ public class ProductDetailsPageServletTest {
         doThrow(OutOfStockException.class).when(cartService).add(cart, product, 1);
         when(request.getPathInfo()).thenReturn("/1");
         when(servlet.getProductFromPath(request)).thenReturn(product);
-        when(request.getRequestURI()).thenReturn("http://localhost:8080/phoneshop-servlet-api/products/1");
 
         servlet.doPost(request, response);
 

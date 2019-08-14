@@ -38,7 +38,8 @@
                             <a href="${pageContext.servletContext.contextPath}/products/${cartItem.product.id}">${cartItem.product.description}</a>
                         </td>
                         <td>
-                            <input name="quantity" class="quantity" type="number" value="${not empty errors[status.index] ? paramValues.quantity[status.index] : cartItem.quantity}">
+                            <input name="quantity" class="quantity" type="number"
+                                   value="${not empty errors[status.index] ? paramValues.quantity[status.index] : cartItem.quantity}">
                             <c:if test="${not empty errors[status.index]}">
                                 <span class="error">${errors[status.index]}</span>
                             </c:if>
@@ -62,6 +63,7 @@
                 <p class="good">${param.message}</p>
             </c:if>
             <button>Update</button>
+            <button formaction="${pageContext.servletContext.contextPath}/checkout" formmethod="get">Checkout</button>
         </form>
     </c:if>
     <c:if test="${empty cart.cartItems}">

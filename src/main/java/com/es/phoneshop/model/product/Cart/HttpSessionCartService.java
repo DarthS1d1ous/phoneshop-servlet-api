@@ -74,6 +74,15 @@ public class HttpSessionCartService implements CartService {
         recalculateCart(cart);
     }
 
+    @Override
+    public void clearCart(HttpSession session) {
+        Cart cart = getCart(session);
+        cart.getCartItems().forEach(cartItem -> cartItem.getProduct().setStock(cartItem.getProduct().getStock() - cartItem.getQuantity()));
+        cart.getCartItems().clear();
+        cart.setTotalCost(BigDecimal.ZERO);
+        cart.setTotalQuantity(0);
+    }
+
     private void recalculateCart(Cart cart) {
         BigDecimal totalCost = new BigDecimal(cart.getCartItems().stream()
                 .mapToInt(cartItem -> cartItem.getQuantity() * cartItem.getProduct().getPrice().intValue()).sum());

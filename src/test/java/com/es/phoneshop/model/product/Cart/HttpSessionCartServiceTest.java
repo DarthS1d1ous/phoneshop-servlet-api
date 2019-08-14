@@ -126,4 +126,12 @@ public class HttpSessionCartServiceTest {
 
         httpSessionCartService.add(cart1, product1, 1);
     }
+
+    @Test
+    public void testClearCart() {
+        httpSessionCartService.clearCart(session);
+
+        verify(cart1).setTotalCost(BigDecimal.ZERO);
+        verify(cart1).setTotalQuantity(0);
+    }
 }

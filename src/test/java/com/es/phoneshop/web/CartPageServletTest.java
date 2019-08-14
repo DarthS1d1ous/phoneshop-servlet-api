@@ -58,7 +58,7 @@ public class CartPageServletTest {
         verify(cartService).getCart(session);
         verify(request).setAttribute("cart", cart);
         verify(request).getRequestDispatcher("/WEB-INF/pages/cart.jsp");
-        requestDispatcher.forward(request, response);
+        verify(requestDispatcher).forward(request, response);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class CartPageServletTest {
 
         servlet.doPost(request, response);
 
-        verify(response).sendRedirect(request.getRequestURI()+"?message=Update successfully");
+        verify(response).sendRedirect(request.getRequestURI() + "?message=Update successfully");
     }
 
     @Test

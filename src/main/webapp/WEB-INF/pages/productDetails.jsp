@@ -38,7 +38,7 @@
 
     <div>
         <form method="post">
-            <input name="quantity" class="price" type="number" value=${param.quantity == null ? 1 : param.quantity}>
+            <input name="quantity" class="price" type="number" value=${not empty param.quantity ? param.quantity : 1}>
             <button>Add to cart</button>
             <c:if test="${not empty param.message}">
                 <p class="good">${param.message}</p>
