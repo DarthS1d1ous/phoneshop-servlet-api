@@ -6,7 +6,7 @@
 
 <jsp:useBean id="order" type="com.es.phoneshop.model.product.order.Order" scope="request"/>
 <tags:master pageTitle="Product List">
-
+    <c:if test="${not empty order.cart.cartItems}">
     <form method="post">
         <table>
             <thead>
@@ -79,5 +79,6 @@
             <%--<label for="cash">Cash</label><input type="radio" name="paymentMethod" id="cash">--%>
             <%--<label for="creditCart">Credit Cart</label><input type="radio" name="paymentMethod" id="creditCart"><br>--%>
     </form>
+    </c:if>
 
 </tags:master>
